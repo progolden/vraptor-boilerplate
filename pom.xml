@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>vraptor-boilerplate-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0-SNAPSHOT</version>
+  <parent>
+  	<groupId>br.com.progolden</groupId>
+  	<artifactId>parent</artifactId>
+  	<version>1.2-SNAPSHOT</version>
+  </parent>
+  
+  <name>VRaptor Boilerplate Tools</name>
+  <description>VRaptor Boilerplate Tools parent main POM.</description>
+  <url>https://github.com/progolden/vraptor-boilerplate</url>
+  
+  <licenses>
+    <license>
+      <name>The MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git@github.com:progolden/vraptor-boilerplate.git</connection>
+    <developerConnection>scm:git:git@github.com:progolden/vraptor-boilerplate.git</developerConnection>
+    <url>https://github.com/progolden/vraptor-boilerplate</url>
+    <tag>HEAD</tag>
+  </scm>
+  
+  <developers>
+  	<developer>
+  		<email>renatorroliveira@gmail.com</email>
+  		<name>Renato R. R. de Oliveira</name>
+  		<organization>ProGolden Technology Solutions</organization>
+  		<organizationUrl>http://www.progolden.com.br/</organizationUrl>
+  		<roles>
+  			<role>CTO</role>
+  		</roles>
+  	</developer>
+  </developers>
+  
+  <modules>
+    <module>vraptor-boilerplate-core</module>
+    <module>vraptor-boilerplate-hibernate</module>
+    <module>vraptor-boilerplate-jpa</module>
+    <module>vraptor-boilerplate-usercontrol</module>
+    <module>vraptor-boilerplate-utils</module>
+  </modules>
+</project>
