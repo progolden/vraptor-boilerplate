@@ -22,6 +22,18 @@ public final class EmailUtils {
 	private static String SMTP_PASSWORD = null;
 	private static Boolean SMTP_SSL = false;
 	
+	public static void setSmtpSettings(
+			String host,
+			Integer port,
+			String user,
+			String password,
+			Boolean ssl) {
+		SMTP_HOST = host;
+		SMTP_PORT = port;
+		SMTP_USER = user;
+		SMTP_PASSWORD = password;
+		SMTP_SSL = ssl;
+	}
 	
 	public static final Pattern ENDL_REGEX = Pattern.compile("\\v");
 	public static final Pattern DUPE_WS_REGEX = Pattern.compile("\\h+");

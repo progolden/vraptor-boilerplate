@@ -32,7 +32,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 
 /**
@@ -44,12 +43,24 @@ public class CryptManager {
 
 	private static final Logger LOG = Logger.getLogger(CryptManager.class);
 	
+	private static String DEFAULT_KEY = null;
 	private static String SALT = "ZZy!2mn'/1dS4p@";
-	public static void updateSalt(String newSalt) {
-		if (GeneralUtils.isEmpty(newSalt) || (newSalt.length() < 6)) {
+	public static void updateSalt(String prefix, String suffix) {
+		String newSalt =
+			(GeneralUtils.isEmpty(prefix) ? "":prefix)+
+			"'"+
+			(GeneralUtils.isEmpty(suffix) ? "":suffix)
+		;
+		if (GeneralUtils.isEmpty(newSalt) || (newSalt.length() < 7)) {
+			throw new IllegalArgumentException("The provided key must have 16 characters length.");
+		}
+		SALT = newSalt;
+	}
+	public static void updateKey(String key) {
+		if (GeneralUtils.isEmpty(key) || (key.length() != 16)) {
 			throw new IllegalArgumentException("The provided salt must have at least 6 characters length.");
 		}
-		SALT = newSalt + "'" + StringUtils.reverse(newSalt);
+		DEFAULT_KEY = key;
 	}
 	
 	/** Cipher key. */
@@ -64,12 +75,11 @@ public class CryptManager {
 	private final Base64 base64;
 	
 	/**
-	 * Instantiates a crypt manager that uses a fallback encryption key.
-	 * @deprecated PROVIDE YOUR OWN ENCRYPTION KEY!
+	 * Instantiates a crypt manager that uses a default encryption key.
+	 * You must set the default key via {@link CryptManager.updateKey} method.
 	 */
-	@Deprecated
 	public CryptManager() {
-		this("QT15k78s-/*'G6m9");
+		this(DEFAULT_KEY);
 	}
 	
 	/**
@@ -77,6 +87,9 @@ public class CryptManager {
 	 * @param key 16-characters length key/password to Blowfish encryption.
 	 */
 	public CryptManager(String key) {
+		if (key == null) {
+			throw new IllegalArgumentException("You must provide a key or set the default key.");
+		}
 		LOG.debug("Instantiating crypt manager.");
 		this.key = key.getBytes();
 		try {
