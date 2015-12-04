@@ -28,6 +28,7 @@ package br.com.caelum.vraptor.boilerplate.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -96,6 +97,11 @@ public final class GeneralUtils {
 
 	public static boolean isInvalidId(Long id) {
 		return ((id == null) || (id <= 0L));
+	}
+	
+	@Deprecated
+	public static boolean isNull(Serializable obj) {
+		return (obj == null);
 	}
 	
 	public static Throwable getRootCause(Throwable ex) {
