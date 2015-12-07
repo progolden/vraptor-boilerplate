@@ -22,6 +22,9 @@ public final class EmailUtils {
 	private static String SMTP_PASSWORD = null;
 	private static Boolean SMTP_SSL = false;
 	
+	private static String DEFAULT_FROM_EMAIL = null;
+	private static String DEFAULT_FROM_NAME = null;
+	
 	public static void setSmtpSettings(
 			String host,
 			Integer port,
@@ -35,8 +38,21 @@ public final class EmailUtils {
 		SMTP_SSL = ssl;
 	}
 	
+	public static void setDefaultFrom(String email, String name) {
+		DEFAULT_FROM_EMAIL = email;
+		DEFAULT_FROM_NAME = name;
+	}
+	
 	public static final Pattern ENDL_REGEX = Pattern.compile("\\v");
 	public static final Pattern DUPE_WS_REGEX = Pattern.compile("\\h+");
+	
+	public static String sendEmail(
+			String to,
+			String subject,
+			String body,
+			boolean html) throws EmailException {
+		return sendEmail(DEFAULT_FROM_EMAIL, DEFAULT_FROM_NAME, to, subject, body, html);
+	}
 	
 	public static String sendEmail(
 			String fromMail,

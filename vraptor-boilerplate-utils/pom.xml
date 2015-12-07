@@ -52,6 +52,10 @@
 			<artifactId>sms-gateway</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<groupId>org.hibernate.javax.persistence</groupId>
+		</dependency>
 	</dependencies>
 
 </project>
