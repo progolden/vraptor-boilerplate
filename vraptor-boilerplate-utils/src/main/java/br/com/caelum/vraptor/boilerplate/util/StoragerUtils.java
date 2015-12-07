@@ -35,14 +35,6 @@ public class StoragerUtils {
 		STORAGER_SECRET = clientSecret;
 	}
 	
-	/**
-	 * 
-	 * @param body The input stream with the multipart body content.
-	 * @param contentType The content type header content for the multipart request.
-	 * @param response The HTTP response to write to.
-	 * @return The uploaded file URL.
-	 * @throws MalformedURLException,IOException 
-	 */
 	public static String pipeMultipartFile(InputStream body, String contentType, HttpServletResponse response) throws MalformedURLException,IOException {
 		HttpURLConnection httpUrlConnection = null;
 		OutputStream outputStream = null;

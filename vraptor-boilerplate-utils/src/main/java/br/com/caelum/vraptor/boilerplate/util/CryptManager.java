@@ -76,7 +76,7 @@ public class CryptManager {
 	
 	/**
 	 * Instantiates a crypt manager that uses a default encryption key.
-	 * You must set the default key via {@link CryptManager.updateKey} method.
+	 * You must set the default key via updateKey() method.
 	 */
 	public CryptManager() {
 		this(DEFAULT_KEY);
