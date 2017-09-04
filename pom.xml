@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>br.com.progolden</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.2</version>
+		<version>1.5</version>
 	</parent>
 
 	<name>VRaptor Boilerplate Tools</name>
@@ -44,8 +44,7 @@
 	<modules>
 		<module>vraptor-boilerplate-core</module>
 		<module>vraptor-boilerplate-hibernate</module>
-		<module>vraptor-boilerplate-jpa</module>
-		<!--<module>vraptor-boilerplate-usercontrol</module>-->
+		<module>vraptor-boilerplate-usercontrol</module>
 		<module>vraptor-boilerplate-utils</module>
 	</modules>
 
