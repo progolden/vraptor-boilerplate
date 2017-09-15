@@ -7,12 +7,13 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-
 import br.com.caelum.vraptor.boilerplate.util.GeneralUtils;
 
-@Dependent
+/**
+ * A bundle of internationalized messages.
+ * @author Renato R. R. de Oliveira
+ *
+ */
 public class MessageBundle {
 	/** Lolcale para um objeto definido com uma lingua. */
 	private final Locale locale;
@@ -21,11 +22,15 @@ public class MessageBundle {
 	/** Mapa com overlays de mensagens ao bundle padrão. */
 	private Map<String, String> overlay;
 	
-	@Inject
-	public MessageBundle(CoreMessages config) {
-		this.locale = config.DEFAULT_LOCALE;
+	public MessageBundle(MessageBundleConfig config) {
+		this.locale = config.getDefaultLocale();
 		this.overlay = null;
-		this.bundle = (PropertyResourceBundle) PropertyResourceBundle.getBundle(config.BUNDLE_NAME, this.locale);
+		this.bundle = (PropertyResourceBundle) PropertyResourceBundle.getBundle(config.getBundleResourceName(), this.locale);
+	}
+	public MessageBundle(Locale locale, String bundleResourceName) {
+		this.locale = locale;
+		this.overlay = null;
+		this.bundle = (PropertyResourceBundle) PropertyResourceBundle.getBundle(bundleResourceName, this.locale);
 	}
 	@Deprecated
 	protected MessageBundle() { this(null); }

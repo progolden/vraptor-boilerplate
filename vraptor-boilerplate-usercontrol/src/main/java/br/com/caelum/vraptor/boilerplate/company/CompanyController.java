@@ -16,6 +16,7 @@ import br.com.caelum.vraptor.Consumes;
 import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Get;
+import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Put;
 import br.com.caelum.vraptor.boilerplate.Cached;
@@ -23,6 +24,8 @@ import br.com.caelum.vraptor.boilerplate.NoCache;
 import br.com.caelum.vraptor.boilerplate.UserControlAbstractController;
 import br.com.caelum.vraptor.boilerplate.bean.PaginatedList;
 import br.com.caelum.vraptor.boilerplate.i18n.MessageBundle;
+import br.com.caelum.vraptor.boilerplate.router.PrefixedRouteResolver;
+import br.com.caelum.vraptor.boilerplate.router.RuntimePath;
 import br.com.caelum.vraptor.boilerplate.user.authz.AccessLevels;
 import br.com.caelum.vraptor.boilerplate.user.authz.Permissioned;
 import br.com.caelum.vraptor.boilerplate.user.authz.permission.EditMessagesPermission;
@@ -37,11 +40,12 @@ public class CompanyController extends UserControlAbstractController {
 	@Inject private MessageBundle bundle;
 	
 	/**
-	 * Configura os temas no sistema.
+	 * Lista os temas disponíveis na factory de temas.
 	 * 
-	 * @return void
 	 */
-	@Get("/api/company/themes")
+	@Get
+	@Path("/company/themes")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@Cached(Cached.ONE_WEEK)
 	public void listThemes() {
 		try {
@@ -64,10 +68,9 @@ public class CompanyController extends UserControlAbstractController {
 	 * 
 	 * @param company,
 	 *            nova companhia a ser persistida no banco de dados.
-	 * @return company, a nova companhia que acabou de ser persistida no banco
-	 *         de dados.
 	 */
-	@Post("/api/company")
+	@Post("/company")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@Consumes
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
@@ -88,7 +91,8 @@ public class CompanyController extends UserControlAbstractController {
 	 * @param company, empresa a ser atualizada no banco de dados.
 	 * 
 	 */
-	@Put("/api/company")
+	@Put("/company")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@Consumes
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
@@ -114,9 +118,9 @@ public class CompanyController extends UserControlAbstractController {
 	 * Retorna uma companhia de acordo com seu id.
 	 * 
 	 * @param id da companhia desejada.
-	 * @return company, companhia desejada que possui o dado id.
 	 */
-	@Get("/api/company/{id}")
+	@Get("/company/{id}")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
 	public void retrieveCompany(Long id) {
@@ -136,9 +140,9 @@ public class CompanyController extends UserControlAbstractController {
 	/**
 	 * Lista as companhias limitados a uma dada página.
 	 * @param page, página desejada da listagem de companhias.
-	 * @return companies, lista de companhias da dada página.
 	 */
-	@Get("/api/company")
+	@Get("/company")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
 	public void listCompanies(Integer page) {
@@ -155,9 +159,9 @@ public class CompanyController extends UserControlAbstractController {
 	/**
 	 * Deleta uma companhia específica, conforme um dado id.
 	 * @param id da companhia a ser deletada.
-	 * @return void
 	 */
-	@Delete("/api/company/{id}")
+	@Delete("/company/{id}")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
 	public void delete(@NotNull Long id) {
@@ -188,9 +192,9 @@ public class CompanyController extends UserControlAbstractController {
 	/**
 	 * Salvar um novo domínio no banco de dados.
 	 * @param domain, novo domínio a ser salvo.
-	 * @return domain, novo domínio que acabou de ser salvo.
 	 */
-	@Post("/api/companydomain")
+	@Post("/companydomain")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@Consumes
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
@@ -213,9 +217,9 @@ public class CompanyController extends UserControlAbstractController {
 	/**
 	 * Atualizar um domínio no banco de dados.
 	 * @param domain, domínio a atualizado.
-	 * @return existent, domínio atualizado.
 	 */
-	@Put("/api/companydomain")
+	@Put("/companydomain")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@Consumes
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
@@ -244,9 +248,9 @@ public class CompanyController extends UserControlAbstractController {
 	/**
 	 * Retorna um domínio do banco de dados, conforme um dado id.
 	 * @param id, referente ao domínio desejado.
-	 * @return domain, domínio desejado.
 	 */
-	@Get("/api/companydomain/{id}")
+	@Get("/companydomain/{id}")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
 	public void retrieveCompanyDomain(Long id) {
@@ -266,9 +270,9 @@ public class CompanyController extends UserControlAbstractController {
 	/**
 	 * Lista os domínios, limitados a uma dada página.
 	 * @param page, página desejada dos domínios.
-	 * @return domains, lista dos domínios da dada página.
 	 */
-	@Get("/api/companydomain")
+	@Get("/companydomain")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
 	public void listCompanyDomains(Integer page) {
@@ -286,9 +290,9 @@ public class CompanyController extends UserControlAbstractController {
 	/**
 	 * Excluir um domínio, especificado pelo id.
 	 * @param id, referente ao domínio a ser deletado.
-	 * @return void.
 	 */
-	@Delete("/api/companydomain/{id}")
+	@Delete("/companydomain/{id}")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@NoCache
 	@Permissioned(AccessLevels.SYSTEM_ADMIN)
 	public void deleteDomain(@NotNull Long id) {
@@ -306,7 +310,8 @@ public class CompanyController extends UserControlAbstractController {
 		}
 	}
 
-	@Post("/api/company/messages")
+	@Post("/company/messages")
+	@RuntimePath(PrefixedRouteResolver.class)
 	@NoCache
 	@Consumes
 	@Permissioned(value = AccessLevels.COMPANY_ADMIN, permissions = {EditMessagesPermission.class})
@@ -325,7 +330,8 @@ public class CompanyController extends UserControlAbstractController {
 		}
 	}
 	
-	@Get("/api/company/messages")
+	@Get("/company/messages")
+	@RuntimePath(PrefixedRouteResolver.class)
 	public void getMessages() {
 		CompanyDomain domain = this.bs.currentDomain();
 		if (domain != null) {

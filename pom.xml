@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>br.com.progolden</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.5</version>
+		<version>1.6-SNAPSHOT</version>
 	</parent>
 
 	<name>VRaptor Boilerplate Tools</name>
