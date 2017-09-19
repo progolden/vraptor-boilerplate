@@ -1,7 +1,7 @@
 package br.com.caelum.vraptor.boilerplate.router;
 
-import br.com.caelum.vraptor.Path;
+import java.lang.reflect.Method;
 
 public interface RuntimeRouteResolver {
-	String[] getURIsFor(Path pathAnn);
+	String[] resolve(Method javaMethod, Class<?> type, String... uris);
 }

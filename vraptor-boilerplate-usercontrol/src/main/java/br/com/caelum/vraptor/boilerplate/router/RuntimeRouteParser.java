@@ -40,10 +40,10 @@ public class RuntimeRouteParser extends PathAnnotationRoutesParser {
 			RuntimePath runtimePathAnn = javaMethod.getAnnotation(RuntimePath.class);
 			
 			RuntimeRouteResolver resolve;
-			String[] uris = new String[] {};
+			String[] uris = pathAnn.value();
 			try {
 				resolve = runtimePathAnn.value().newInstance();
-				uris = resolve.getURIsFor(pathAnn);
+				uris = resolve.resolve(javaMethod, type, uris);
 			} catch (InstantiationException | IllegalAccessException e) {
 				LOG.errorf(e, "Error instantiating runtime path resolver.");
 				checkArgument(false, "Error instantiating runtime path resolver.");
