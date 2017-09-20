@@ -22,6 +22,7 @@ import br.com.caelum.vraptor.boilerplate.company.CompanyDomain;
 import br.com.caelum.vraptor.boilerplate.company.CompanyUser;
 import br.com.caelum.vraptor.boilerplate.event.Current;
 import br.com.caelum.vraptor.boilerplate.user.auth.UserAccessToken;
+import br.com.caelum.vraptor.boilerplate.user.auth.UserSession;
 import br.com.caelum.vraptor.boilerplate.user.authz.UserPermission;
 import br.com.caelum.vraptor.boilerplate.util.CryptManager;
 import br.com.caelum.vraptor.boilerplate.util.GeneralUtils;
@@ -35,14 +36,66 @@ public class UserBS extends HibernateBusiness {
 	@Inject
 	@Current
 	private CompanyDomain domain;
+	@Inject private UserSession session;
 	private static final int PAGESIZE = 20;
+
+	/**
+	 * Autenticar o usuário que está efetuando login e salva na sessão de usuário.
+	 * 
+	 * @param email
+	 *            E-mail do usuário.
+	 * @param pwd
+	 *            Passoword do usuário.
+	 * @return UserAccessToken Usuário existe e tem acesso ao sistema.
+	 */
+	public UserAccessToken authenticate(String email, String pwd) {
+		Criteria criteria = this.dao.newCriteria(User.class)
+				.add(Restrictions.eq("deleted", false))
+				.add(Restrictions.eq("email", email))
+				.add(Restrictions.eq("password", CryptManager.passwordHash(pwd)));
+		User user = (User) criteria.uniqueResult();
+		if (user != null) {
+			UserAccessToken token = this.generateAccessToken(user);
+			this.session.login(token);
+			return token;
+		}
+		return null;
+	}
+	
+	/**
+	 * Retorna o token de acesso do usuário.
+	 * 
+	 * @param user
+	 *            Usuário para recuperar o token.
+	 * @return token Token de acesso do usuário.
+	 */
+	public UserAccessToken generateAccessToken(User user) {
+		if (user == null)
+			return null;
+		Criteria criteria = this.dao.newCriteria(UserAccessToken.class)
+				.add(Restrictions.eq("user", user))
+				.add(Restrictions.gt("expiration", new Date()))
+				.addOrder(Order.desc("expiration"));
+		List<UserAccessToken> tokens = this.dao.findByCriteria(criteria, UserAccessToken.class);
+		if (GeneralUtils.isEmpty(tokens)) {
+			UserAccessToken token = new UserAccessToken();
+			token.setUser(user);
+			token.setCreation(new Date());
+			token.setCreationIp(this.request.getRemoteAddr());
+			token.setExpiration(new Date(token.getCreation().getTime() + token.getTtl()));
+			token.setToken(CryptManager.digest(user.getEmail() + "#" + String.valueOf(token.getCreation().getTime())
+					+ "@" + String.valueOf(Math.random())));
+			this.dao.persist(token);
+			return token;
+		}
+		return tokens.get(0);
+	}
+
 
 	/**
 	 * Salvar o usuário no banco de dados.
 	 * 
-	 * @param user
-	 *            Usuário a ser salvo.
-	 * @return void.
+	 * @param user Usuário a ser salvo.
 	 */
 	public void save(User user) {
 		if (this.existsByEmail(user.getEmail()) != null) {
@@ -53,22 +106,6 @@ public class UserBS extends HibernateBusiness {
 		user.setDeleted(false);
 		user.setCreation(new Date());
 		this.persist(user);
-	}
-
-	/**
-	 * Autenticar o usuário que está efetuando login.
-	 * 
-	 * @param email
-	 *            E-mail do usuário.
-	 * @param pwd
-	 *            Passoword do usuário.
-	 * @return User Usuário existe e tem acesso ao sistema.
-	 */
-	public User authenticate(String email, String pwd) {
-		Criteria criteria = this.dao.newCriteria(User.class).add(Restrictions.eq("deleted", false))
-				.add(Restrictions.eq("email", email)).add(Restrictions.eq("password", CryptManager.passwordHash(pwd)));
-		User user = (User) criteria.uniqueResult();
-		return user;
 	}
 
 	/**
@@ -86,33 +123,6 @@ public class UserBS extends HibernateBusiness {
 		if (user != null)
 			return false;
 		return true;
-	}
-
-	/**
-	 * Retorna o token de acesso do usuário.
-	 * 
-	 * @param user
-	 *            Usuário para recuperar o token.
-	 * @return token Token de acesso do usuário.
-	 */
-	public UserAccessToken retrieveToken(User user) {
-		if (user == null)
-			return null;
-		Criteria criteria = this.dao.newCriteria(UserAccessToken.class).add(Restrictions.eq("user", user))
-				.add(Restrictions.gt("expiration", new Date())).addOrder(Order.desc("expiration"));
-		List<UserAccessToken> tokens = this.dao.findByCriteria(criteria, UserAccessToken.class);
-		if (GeneralUtils.isEmpty(tokens)) {
-			UserAccessToken token = new UserAccessToken();
-			token.setUser(user);
-			token.setCreation(new Date());
-			token.setCreationIp(this.request.getRemoteAddr());
-			token.setExpiration(new Date(token.getCreation().getTime() + token.getTtl()));
-			token.setToken(CryptManager.digest(user.getEmail() + "#" + String.valueOf(token.getCreation().getTime())
-					+ "@" + String.valueOf(Math.random())));
-			this.dao.persist(token);
-			return token;
-		}
-		return tokens.get(0);
 	}
 
 	/**

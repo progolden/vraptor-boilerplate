@@ -1,6 +1,7 @@
 package br.com.caelum.vraptor.boilerplate;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import br.com.caelum.vraptor.boilerplate.user.auth.UserSession;
 
@@ -14,9 +15,6 @@ import br.com.caelum.vraptor.boilerplate.user.auth.UserSession;
  */
 public abstract class UserControlAbstractController extends AbstractController {
 
-	/** Prefixo dos end points REST. */
-	protected static final String BASEPATH = "/api/usercontrol/";
-	
-	/** Objecto da sessão do usuário. Injetado automaticamente. */
 	@Inject protected UserSession userSession;
+	@Inject protected HttpServletRequest request;
 }
