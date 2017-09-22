@@ -24,7 +24,7 @@ public class UserRecoverRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(nullable=false, length=256)
+	@Column(nullable=false, length=128)
 	private String token;
 
 	@Temporal(TemporalType.TIMESTAMP)

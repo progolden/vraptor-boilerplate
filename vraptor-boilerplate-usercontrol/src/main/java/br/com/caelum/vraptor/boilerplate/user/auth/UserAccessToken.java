@@ -26,8 +26,11 @@ public class UserAccessToken implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(nullable=false, length=256)
+	@Column(nullable=false, length=128)
 	private String token;
+
+	@Column(nullable=true, length=256)
+	private String device;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false)
@@ -41,7 +44,7 @@ public class UserAccessToken implements Serializable {
 	private Date expiration;
 	
 	@Column(nullable=false)
-	private Long ttl = 86400000L * 7L;
+	private Long ttl = 86400000L * 3L;
 
 	@ManyToOne(targetEntity=User.class, fetch=FetchType.EAGER, optional=false)
 	private User user;
@@ -92,6 +95,14 @@ public class UserAccessToken implements Serializable {
 
 	public void setExpiration(Date expiration) {
 		this.expiration = expiration;
+	}
+
+	public String getDevice() {
+		return device;
+	}
+
+	public void setDevice(String device) {
+		this.device = device;
 	}
 	
 }

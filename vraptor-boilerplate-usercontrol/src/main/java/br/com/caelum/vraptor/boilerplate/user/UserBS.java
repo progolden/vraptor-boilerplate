@@ -48,14 +48,17 @@ public class UserBS extends HibernateBusiness {
 	 *            Passoword do usuário.
 	 * @return UserAccessToken Usuário existe e tem acesso ao sistema.
 	 */
-	public UserAccessToken authenticate(String email, String pwd) {
+	public UserAccessToken authenticate(String email, String pwd, String device) {
 		Criteria criteria = this.dao.newCriteria(User.class)
 				.add(Restrictions.eq("deleted", false))
-				.add(Restrictions.eq("email", email))
+				.add(Restrictions.or(
+					Restrictions.eq("email", email),
+					Restrictions.eq("username", email)
+				))
 				.add(Restrictions.eq("password", CryptManager.passwordHash(pwd)));
 		User user = (User) criteria.uniqueResult();
 		if (user != null) {
-			UserAccessToken token = this.generateAccessToken(user);
+			UserAccessToken token = this.generateAccessToken(user, device);
 			this.session.login(token);
 			return token;
 		}
@@ -69,17 +72,19 @@ public class UserBS extends HibernateBusiness {
 	 *            Usuário para recuperar o token.
 	 * @return token Token de acesso do usuário.
 	 */
-	public UserAccessToken generateAccessToken(User user) {
+	public UserAccessToken generateAccessToken(User user, String device) {
 		if (user == null)
 			return null;
 		Criteria criteria = this.dao.newCriteria(UserAccessToken.class)
 				.add(Restrictions.eq("user", user))
+				.add(Restrictions.eqOrIsNull("device", device))
 				.add(Restrictions.gt("expiration", new Date()))
-				.addOrder(Order.desc("expiration"));
+				.addOrder(Order.asc("expiration"));
 		List<UserAccessToken> tokens = this.dao.findByCriteria(criteria, UserAccessToken.class);
 		if (GeneralUtils.isEmpty(tokens)) {
 			UserAccessToken token = new UserAccessToken();
 			token.setUser(user);
+			token.setDevice(device);
 			token.setCreation(new Date());
 			token.setCreationIp(this.request.getRemoteAddr());
 			token.setExpiration(new Date(token.getCreation().getTime() + token.getTtl()));

@@ -52,7 +52,7 @@ public class CryptManager {
 			(GeneralUtils.isEmpty(suffix) ? "":suffix)
 		;
 		if (GeneralUtils.isEmpty(newSalt) || (newSalt.length() < 7)) {
-			throw new IllegalArgumentException("The provided key must have 16 characters length.");
+			throw new IllegalArgumentException("The provided salt must have at least 7 characters length.");
 		}
 		SALT = newSalt;
 	}
