@@ -36,6 +36,11 @@ import br.com.caelum.vraptor.boilerplate.util.GeneralUtils;
 import br.com.caelum.vraptor.interceptor.AcceptsWithAnnotations;
 import br.com.caelum.vraptor.interceptor.SimpleInterceptorStack;
 
+/**
+ * 
+ * @author Renato R. R. de Oliveira
+ *
+ */
 @Intercepts(after=HeadersInterceptor.class)
 @RequestScoped
 @AcceptsWithAnnotations(NoCache.class)

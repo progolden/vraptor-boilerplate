@@ -43,7 +43,8 @@ public class UserSession implements Serializable {
 		this.accessToken = token;
 		
 		UserBS bs = CDI.current().select(UserBS.class).get();
-		List<UserPermission> perms = bs.retrievePermissions(token.getUser());
+		// TODO Recuperar as permissões de fato.
+		List<UserPermission> perms = null;
 		if (GeneralUtils.isEmpty(perms)) {
 			this.permissions = new ArrayList<String>();
 		} else {
@@ -53,7 +54,7 @@ public class UserSession implements Serializable {
 			}
 		}
 		
-		this.accessLevel = bs.retrieveAccessLevel(token.getUser());
+		this.accessLevel = token.getUser().getAccessLevel();
 		this.loginEvent.fire(new AuthEvent(this.accessToken));
 	}
 	

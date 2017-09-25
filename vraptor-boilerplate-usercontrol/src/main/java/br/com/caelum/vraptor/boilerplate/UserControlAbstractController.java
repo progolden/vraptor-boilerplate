@@ -10,7 +10,7 @@ import br.com.caelum.vraptor.boilerplate.user.auth.UserSession;
  * para os end points REST e injetar o objeto de sessão de usuário automaticamente nos
  * controladores do sistema. Todos os controladores devem estender dessa classe.
  * 
- * @author Renato R. R. de Oliveira <renatorro@comp.ufla.br>
+ * @author Renato R. R. de Oliveira
  *
  */
 public abstract class UserControlAbstractController extends AbstractController {

@@ -20,8 +20,8 @@ import java.util.function.Consumer;
  * @author Renato R. R. de Oliveira &lt;renatorro@comp.ufla.br&gt;
  * @param <T> Interface de descreve o tipo de componente que a factory armazenará.
  * 
- * @link org.forpdi.core.company.CompanyThemeFactory CompanyThemeFactory
- * @link org.forpdi.core.user.authz.PermissionFactory PermissionFactory
+ * @see br.com.caelum.vraptor.boilerplate.company.CompanyThemeFactory CompanyThemeFactory
+ * @see br.com.caelum.vraptor.boilerplate.user.authz.PermissionFactory PermissionFactory
  */
 public abstract class ComponentFactory<T extends IdentifiableComponent> {
 
@@ -76,7 +76,7 @@ public abstract class ComponentFactory<T extends IdentifiableComponent> {
 	 * Executa um consumer para cada componente registrado.
 	 * @param operation Operação a ser executada.
 	 */
-	public <R> void each(Consumer<T> operation) {
+	public void each(Consumer<T> operation) {
 		for (T component : components) {
 			operation.accept(component);
 		}

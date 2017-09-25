@@ -11,7 +11,11 @@ import br.com.caelum.vraptor.observer.upload.MultipartConfig;
 import br.com.caelum.vraptor.validator.Validator;
 
 
-
+/**
+ * 
+ * @author Renato R. R. de Oliveira
+ *
+ */
 @Specializes
 public class MultipartInterceptor extends CommonsUploadMultipartObserver {
 	

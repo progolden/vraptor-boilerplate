@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
  * Anotação que indica uqe um end point recebe conteúdo
  * multipart data e esse conteúdo deve ser processado
  * pela commons-upload.
- * @author Renato R. R. de Oliveira <renatorro@comp.ufla.br>
+ * @author Renato R. R. de Oliveira
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

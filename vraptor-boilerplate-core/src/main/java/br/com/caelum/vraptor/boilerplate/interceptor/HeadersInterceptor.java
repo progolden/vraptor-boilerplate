@@ -33,6 +33,11 @@ import br.com.caelum.vraptor.AroundCall;
 import br.com.caelum.vraptor.Intercepts;
 import br.com.caelum.vraptor.interceptor.SimpleInterceptorStack;
 
+/**
+ * 
+ * @author Renato R. R. de Oliveira
+ *
+ */
 @Intercepts
 @RequestScoped
 public class HeadersInterceptor {
