@@ -21,6 +21,9 @@ public final class EmailUtils {
 	private static String SMTP_USER = null;
 	private static String SMTP_PASSWORD = null;
 	private static Boolean SMTP_SSL = false;
+	private static Boolean SMTP_TLS = false;
+	
+	public static String CHARSET = "UTF-8";
 	
 	private static String DEFAULT_FROM_EMAIL = null;
 	private static String DEFAULT_FROM_NAME = null;
@@ -30,12 +33,14 @@ public final class EmailUtils {
 			Integer port,
 			String user,
 			String password,
-			Boolean ssl) {
+			Boolean ssl,
+			Boolean tls) {
 		SMTP_HOST = host;
 		SMTP_PORT = port;
 		SMTP_USER = user;
 		SMTP_PASSWORD = password;
 		SMTP_SSL = ssl;
+		SMTP_TLS = tls;
 	}
 	
 	public static void setDefaultFrom(String email, String name) {
@@ -96,7 +101,7 @@ public final class EmailUtils {
 		try {
 			email.setSmtpPort(SMTP_PORT);
 			email.setHostName(SMTP_HOST);
-			email.setCharset("UTF-8");
+			email.setCharset(CHARSET);
 			if (!GeneralUtils.isEmpty(SMTP_USER)) {
 				email.setAuthentication(
 					SMTP_USER,
@@ -104,6 +109,7 @@ public final class EmailUtils {
 				);
 			}
 			email.setSSLOnConnect(SMTP_SSL);
+			email.setStartTLSEnabled(SMTP_TLS);
 		} catch (Throwable ex) {
 			LOG.error("Erro ao configurar o email.", ex);
 			throw new RuntimeException("Error configuring smtp connection.", ex);

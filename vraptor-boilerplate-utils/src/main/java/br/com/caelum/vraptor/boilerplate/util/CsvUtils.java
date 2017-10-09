@@ -22,7 +22,7 @@ public class CsvUtils {
 	private static final int READ_BUFFER_SIZE = 4096;
 	private static final Charset CHARSET = Charset.forName("UTF-8");
 	
-	public static int readFromCsv(InputStream input, Consumer<? super CSVRecord> action) throws IOException {
+	public static ReadResult readFromCsv(InputStream input, Consumer<? super CSVRecord> action) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(input, CHARSET), READ_BUFFER_SIZE);
 		CSVParser parser = new CSVParser(reader, CSVFormat.EXCEL
 			.withDelimiter(';')
@@ -32,7 +32,7 @@ public class CsvUtils {
 		parser.forEach(wrapper);
 		parser.close();
 		reader.close();
-		return wrapper.readedReacords;
+		return new ReadResult(wrapper.readedReacords, wrapper.successfulReadedRecors);
 	}
 	
 	public static void writeToCsv(OutputStream output, Iterable<? extends List<String>> dumper) throws IOException {
@@ -48,9 +48,19 @@ public class CsvUtils {
 		writer.close();
 	}
 	
+	public static class ReadResult {
+		public final int total;
+		public final int succeed;
+		public ReadResult(int total, int succeed) {
+			this.total = total;
+			this.succeed = succeed;
+		}
+	}
+	
 	private static class RecordReaderWrapper implements Consumer<CSVRecord> {
 
 		public int readedReacords = 0;
+		public int successfulReadedRecors = 0;
 		
 		private final Consumer<? super CSVRecord> wrapped;
 		
@@ -63,8 +73,9 @@ public class CsvUtils {
 			this.readedReacords++;
 			try {
 				this.wrapped.accept(t);
+				this.successfulReadedRecors++;
 			} catch (Throwable ex) {
-				LOG.errorf(ex, "Exception when parsing record %d from CSV.", this.readedReacords);
+				LOG.errorf("Exception when parsing record %d from CSV.", this.readedReacords);
 			}
 		}
 		
