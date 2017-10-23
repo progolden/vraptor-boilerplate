@@ -30,51 +30,70 @@ import com.ibm.icu.text.Normalizer2;
 public final class TextUtils {
 
 	public static final Version LUCENE_MATCH_VERSION = Version.LUCENE_4_10_4;
-	
+
 	public static final CharArraySet PT_STOPWORDS = new CharArraySet(100, true);
+	public static final CharArraySet EN_STOPWORDS = new CharArraySet(100, true);
 	static {
 		try {
-			InputStream stream = TextUtils.class.getClassLoader()
-					.getResourceAsStream("stopwords_portugues.txt");
-			InputStreamReader isr = new InputStreamReader(stream, Charset.forName("ISO-8859-1"));
-			BufferedReader br = new BufferedReader(isr);
-			while (br.ready()) {
-				String line = br.readLine();
-				PT_STOPWORDS.add(line);
+			InputStream stream = TextUtils.class.getResourceAsStream("stopwords_pt.txt");
+			if (stream != null) {
+				InputStreamReader isr = new InputStreamReader(stream, Charset.forName("UTF-8"));
+				BufferedReader br = new BufferedReader(isr);
+				while (br.ready()) {
+					String line = br.readLine();
+					PT_STOPWORDS.add(line);
+				}
+				br.close();
+				isr.close();
+				stream.close();
 			}
-			br.close();
-			isr.close();
-			stream.close();
+
+			stream = TextUtils.class.getResourceAsStream("stopwords_en.txt");
+			if (stream != null) {
+				InputStreamReader isr = new InputStreamReader(stream, Charset.forName("UTF-8"));
+				BufferedReader br = new BufferedReader(isr);
+				while (br.ready()) {
+					String line = br.readLine();
+					EN_STOPWORDS.add(line);
+				}
+				br.close();
+				isr.close();
+				stream.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static final Normalizer2 FOLDING_NORMALIZER =  Normalizer2.getInstance(
-	      ICUFoldingFilter.class.getResourceAsStream("utr30.nrm"), 
+	      ICUFoldingFilter.class.getResourceAsStream("utr30.nrm"),
 	      "utr30", Normalizer2.Mode.COMPOSE);
-	
+
 	public static List<String> tokenizeAndNormalize(String text) throws IOException {
 		if (GeneralUtils.isEmpty(text)) {
 			return Collections.emptyList();
 		}
 		return tokenize(text.trim(), 32, true, false, false, false);
 	}
-	
+
 	public static List<String> tokenizeForIndex(String text) throws IOException {
 		if (GeneralUtils.isEmpty(text)) {
 			return Collections.emptyList();
 		}
 		return tokenize(text.trim(), 64, false, true, true, true);
 	}
-	
+
 	public static List<String> tokenizeKeywords(String text) throws IOException {
+		return tokenizeKeywords(text, false);
+	}
+	
+	public static List<String> tokenizeKeywords(String text, boolean filterStopWords) throws IOException {
 		if (GeneralUtils.isEmpty(text)) {
 			return Collections.emptyList();
 		}
-		return tokenize(text.trim(), 0, false, true, true, true);
+		return tokenize(text.trim(), filterStopWords ? 32:0, filterStopWords, true, true, true);
 	}
-	
+
 	/**
 	 * Utilize este m�todo apenas se for realizar um �nica chamada de stemming.
 	 * Caso contr�rio instancie um Stemmer e o utilize.
@@ -84,20 +103,20 @@ public final class TextUtils {
 	public static String stem(String term) {
 		return new Stemmer().stem(term);
 	}
-	
+
 	public static String fold(String raw) {
 		return FOLDING_NORMALIZER.normalize(raw);
 	}
-	
+
 	public static Tokenizer getTokenizer(Reader input) {
 		return new StandardTokenizer(input);
 	}
-	
+
 	private static List<String> tokenize(String text, int maxLength, boolean stopwords, boolean stemming,
 			boolean folding, boolean removeDuplicates) throws IOException {
 		StringReader reader = new StringReader(text);
 		Tokenizer tokenizer = getTokenizer(reader);
-		
+
 		TokenStream tokens = tokenizer;
 		if (maxLength > 0)
 			tokens = new LengthFilter(tokens, 3, maxLength);
@@ -109,9 +128,9 @@ public final class TextUtils {
 			tokens = new SnowballFilter(tokens, new Stemmer().stemmer);
 		if (folding)
 			tokens = new ICUFoldingFilter(tokens);
-		
+
 		List<String> result = new LinkedList<String>();
-	    
+
 	    String token;
 	    tokenizer.reset();
 	    if (removeDuplicates) {
@@ -131,7 +150,7 @@ public final class TextUtils {
 	    reader.close();
 	    return result;
 	}
-	
+
 	public static class Stemmer {
 		PortugueseStemmer stemmer = new PortugueseStemmer();
 		public String stem(String term) {
